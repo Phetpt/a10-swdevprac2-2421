@@ -1,8 +1,28 @@
 import DateReserve from "@/components/DateReserve"
+import { getServerSession } from "next-auth"
+import getUserProfile from "@/libs/getUserProfile"
+import { authOptions } from "../api/auth/[...nextauth]/authOptions"
 
-export default function Booking() {
+export default async function Booking() {
+
+  const session = await getServerSession(authOptions)
+  if (!session || !session.user.token) return null
+
+  const profile = await getUserProfile(session.user.token)
+  const createdAt = new Date(profile.data.createdAt)
+
   return(
     <main className="w-[100%] flex flex-col items-center space-y-4">
+      <div className="bg-slate-100 rounded-lg w-fit px-10 py-6 flex flex-col gap-y-4">
+        <div className="text-2xl">{profile.data.name}</div>
+        <table className="table-auto border-separate border-spacing-2"><tbody>
+          <tr><td>Email</td><td>{profile.data.email}</td></tr>
+          <tr><td>Tel.</td><td>{profile.data.tel}</td></tr>
+          <tr><td>Member since</td><td>{createdAt.toString()}</td></tr>
+        </tbody></table>
+      </div>
+      
+
       <div className="text-xl font-medium pt-3">Venue Booking</div>
       
       <div className="w-fit space-y-2">
