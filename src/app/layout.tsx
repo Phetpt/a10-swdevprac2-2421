@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
 
-  const session = getServerSession(authOptions)
+  const session = await getServerSession(authOptions)
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
